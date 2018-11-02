@@ -4,7 +4,7 @@
  * Copyright (c) 2003, 2004 WorldTicket A/S
  * All rights reserved.
  */
-package yiran;
+package index;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -21,7 +21,7 @@ import org.springframework.data.solr.repository.config.EnableSolrRepositories;
  */
 @SpringBootConfiguration
 @EnableSolrRepositories(
-        basePackages = {"yiran.repository"}
+        basePackages = {"index.repository"}
 )
 @ComponentScan
 public class SolrConfig {

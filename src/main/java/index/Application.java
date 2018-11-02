@@ -4,7 +4,7 @@
  * Copyright (c) 2003, 2004 WorldTicket A/S
  * All rights reserved.
  */
-package yiran;
+package index;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

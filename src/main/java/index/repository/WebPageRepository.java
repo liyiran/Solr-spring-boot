@@ -4,11 +4,11 @@
  * Copyright (c) 2003, 2004 WorldTicket A/S
  * All rights reserved.
  */
-package yiran.repository;
+package index.repository;
 
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
-import yiran.entity.WebPage;
+import index.entity.WebPage;
 
 import java.util.List;
 

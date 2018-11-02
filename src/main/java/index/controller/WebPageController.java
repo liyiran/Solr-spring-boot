@@ -4,14 +4,14 @@
  * Copyright (c) 2003, 2004 WorldTicket A/S
  * All rights reserved.
  */
-package yiran.controller;
+package index.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import yiran.entity.WebPage;
-import yiran.repository.WebPageRepository;
+import index.entity.WebPage;
+import index.repository.WebPageRepository;
 
 import java.util.List;
 

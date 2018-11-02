@@ -4,7 +4,7 @@
  * Copyright (c) 2003, 2004 WorldTicket A/S
  * All rights reserved.
  */
-package yiran.entity;
+package index.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
