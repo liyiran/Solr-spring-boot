@@ -24,7 +24,7 @@ public class WebPageController {
     @Autowired
     private WebPageRepository webPageRepository;
 
-    @GetMapping("/product/{text}")
+    @GetMapping("/mercury/{text}")
     public List<WebPage> getAllWebPage(@PathVariable String text) {
         return webPageRepository.findAllByText(text);
     }

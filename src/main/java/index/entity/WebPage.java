@@ -20,8 +20,21 @@ public class WebPage {
     @Indexed(name = "id", type = "string")
     private String id;
 
-    @Indexed(name = "_text_", type = "string")
-    private String text;
+    @Indexed(name = "title", type = "string")
+    private String title;
+
+    @Indexed(name = "og_url", type = "string")
+    private String url;
+
+    @Indexed(name = "og_site_name", type = "string")
+    private String siteName;
+
+    @Indexed(name = "article_published_time", type = "pdates")
+    private String publishedDateTime;
+
+    @Indexed(name = "og_description", type = "pdates")
+    private String description;
+
 
     public String getId() {
         return id;
@@ -31,11 +44,43 @@ public class WebPage {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public String getTitle() {
+        return title;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
+
+    public String getPublishedDateTime() {
+        return this.publishedDateTime;
+    }
+
+    public void setPublishedDateTime(String publishedDateTime) {
+        this.publishedDateTime = publishedDateTime.toString();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
