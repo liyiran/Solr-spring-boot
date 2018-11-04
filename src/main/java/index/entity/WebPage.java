@@ -16,6 +16,19 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
  */
 @SolrDocument(solrCoreName = "myexample")
 public class WebPage {
+    public WebPage() {
+
+    }
+
+    public WebPage(WebPage webPage, String url) {
+        this.id = webPage.id;
+        this.title = webPage.title;
+        this.url = url;
+        this.siteName = webPage.siteName;
+        this.publishedDateTime = webPage.publishedDateTime;
+        this.description = webPage.description;
+    }
+
     @Id
     @Indexed(name = "id", type = "string")
     private String id;

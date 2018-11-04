@@ -17,6 +17,6 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public interface WebPageRepository extends SolrCrudRepository<WebPage, String> {
-    @Query("_text_:*?0*")
+    @Query("_text_:\"*?0*\"")
     List<WebPage> findAllByText(String text);
 }
