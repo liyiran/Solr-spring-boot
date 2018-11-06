@@ -6,9 +6,10 @@
  */
 package index.repository;
 
+import index.entity.WebPage;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
-import index.entity.WebPage;
 
 import java.util.List;
 
@@ -17,6 +18,6 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public interface WebPageRepository extends SolrCrudRepository<WebPage, String> {
-    @Query("_text_:\"*?0*\"")
-    List<WebPage> findAllByText(String text);
+    @Query("_text_:?0")
+    List<WebPage> findAllByText(String text, Sort sort);
 }

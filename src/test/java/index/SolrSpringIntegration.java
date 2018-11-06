@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -36,8 +37,13 @@ public class SolrSpringIntegration {
 
     @Test
     public void testWebPageRepository() {
-        List<WebPage> result = webPageRepository.findAllByText("1236");
-        assertEquals(9, result.size());
+        Sort sort = new Sort(Sort.Direction.ASC, "id");
+        List<WebPage> result = webPageRepository.findAllByText("*", sort);
+        assertEquals("Dunkin’ Donuts declares the start of pumpkin spice season", result.get(4).getTitle());
+
+        sort = new Sort(Sort.Direction.DESC, "id");
+        result = webPageRepository.findAllByText("*", sort);
+        assertEquals("Dunkin’ Donuts declares the start of pumpkin spice season", result.get(0).getTitle());
     }
 //    @BeforeAll
 //    public void setup() {

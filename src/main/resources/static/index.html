@@ -1,0 +1,98 @@
+<html>
+
+<head>
+    <title>Search page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <style>
+        #imaginary_container {
+            margin-top: 20%; /* Don't copy this */
+        }
+
+        .stylish-input-group .input-group-addon {
+            background: white !important;
+        }
+
+        .stylish-input-group .form-control {
+            border-right: 0;
+            box-shadow: 0 0 0;
+            border-color: #ccc;
+        }
+
+        .stylish-input-group button {
+            border: 0;
+            background: transparent;
+        }
+    </style>
+</head>
+<!------ Include the above in your HEAD tag ---------->
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div id="imaginary_container">
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" placeholder="Search" id="searchContent">
+                    <span class="input-group-addon">
+                        <select class="custom-select" id="sort-by">
+                            <option selected value="id">ID</option>
+                            <option value="pageRankFile">PageRankFile</option>
+                        </select>
+                        <select class="custom-select" id="order">
+                            <option selected value="asc">ASC</option>
+                            <option value="desc">DESC</option>
+                        </select>
+                        <button type="submit" id="search">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>  
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" id="result-container">
+    <div class="card" v-for="result in results">
+        <div class="card-body">
+            <h5 class="card-title"><a v-bind:href="result.url">{{result.title}}</a></h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{result.publishedDateTime}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{result.siteName}}</h6>
+            <p class="card-text">{{result.description}}</p>
+        </div>
+    </div>
+
+</div>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    $("#search").click(function () {
+        search();
+    });
+    var result_container = new Vue({
+        el: '#result-container',
+        data: {
+            results: []
+        }
+    });
+
+    function search() {
+        var text = $("#searchContent").val();
+        var sortBy = $("#sort-by").val();
+        var order = $("#order").val();
+        console.log(text);
+        console.log(sortBy);
+        console.log(order);
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: "http://localhost:8080/mercury/" + text + "?sort=" + sortBy + "&direction=" + order,
+            processData: true,
+            success: function (result) {
+                result_container.results = result;
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

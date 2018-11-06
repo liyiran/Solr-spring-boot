@@ -14,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -36,8 +38,14 @@ public class WebPageController {
     private static Logger logger = LoggerFactory.getLogger(GraphGenerator.class);
 
     @GetMapping("/mercury/{text}")
-    public List<WebPage> getAllWebPage(@PathVariable String text) {
-        List<WebPage> webPages = webPageRepository.findAllByText(text);
+    public List<WebPage> getAllWebPage(@PathVariable String text, @RequestParam("sort") String sortBy, @RequestParam("direction") String direction) {
+        Sort sort = null;
+        if (StringUtils.isNotEmpty(sortBy)) {
+            sort = new Sort(Sort.Direction.fromString(direction), sortBy);
+        } else {
+            sort = new Sort(Sort.Direction.ASC, "id");
+        }
+        List<WebPage> webPages = webPageRepository.findAllByText(text, sort);
 
         return webPages.stream().map(webPage -> {
             logger.info(StringUtils.substringAfterLast(webPage.getId(), "/"));
