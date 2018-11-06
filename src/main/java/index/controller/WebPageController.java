@@ -49,7 +49,11 @@ public class WebPageController {
 
         return webPages.stream().map(webPage -> {
             logger.info(StringUtils.substringAfterLast(webPage.getId(), "/"));
-            return new WebPage(webPage, urlMap.get(StringUtils.substringAfterLast(webPage.getId(), "/")));
+            if (StringUtils.isBlank(webPage.getUrl())) {
+                return new WebPage(webPage, urlMap.get(StringUtils.substringAfterLast(webPage.getId(), "/")));
+            } else {
+                return webPage;
+            }
         }).collect(Collectors.toList());
     }
 }

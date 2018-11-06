@@ -33,24 +33,30 @@ public class GraphGenerator {
     private static Logger logger = LoggerFactory.getLogger(GraphGenerator.class);
 
     public static void main(String... args) throws IOException {
-        File dir = new File("src/main/resources/webpages");
+        File dir = new File("/Users/liyiran/solr-7.5.0/server/solr/myexample/mercurynews");
         Reader in = new FileReader("src/main/resources/URLtoHTML_mercury.csv");
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
         BiMap<String, String> urlFileMap = HashBiMap.create();
         Set<String> edgeSet = new HashSet<>();
+        double totalLink = 0;
         for (CSVRecord record : records) {
             urlFileMap.put(record.get(0), record.get(1));
         }
         logger.info("size" + urlFileMap.size());
         PrintWriter writer = new PrintWriter("edgeList.txt");
         for (File file : dir.listFiles()) {
+            if(!file.getName().endsWith(".html")) {
+                logger.info(file.getName());
+                continue;
+            }
             Document doc = Jsoup.parse(file, "UTF-8", urlFileMap.get(file.getName()));
             Elements links = doc.select("a[href]");
-            logger.info("links: " + links.size());
+            totalLink += links.size();
+//            logger.info("links: " + links.size());
             for(Element link : links) {
                 String url = link.attr("href").trim();
                 if(urlFileMap.inverse().containsKey(url)) {
-                    logger.info(file.getName() + " " + urlFileMap.inverse().get(url));
+//                    logger.info(file.getName() + " " + urlFileMap.inverse().get(url));
                     edgeSet.add(file.getName() + " " + urlFileMap.inverse().get(url));
                 }
             }
@@ -60,5 +66,6 @@ public class GraphGenerator {
         }
         writer.flush();
         writer.close();
+        logger.info("total link: " +totalLink);
     }
 }
