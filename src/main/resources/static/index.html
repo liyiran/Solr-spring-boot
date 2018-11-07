@@ -34,7 +34,7 @@
                     <input type="text" class="form-control" placeholder="Search" id="searchContent">
                     <span class="input-group-addon">
                         <select class="custom-select" id="sort-by">
-                            <option selected value="id">ID</option>
+                            <option selected value="">default</option>
                             <option value="pageRankFile">PageRankFile</option>
                         </select>
                         <select class="custom-select" id="order">
@@ -51,12 +51,13 @@
     </div>
 </div>
 <div class="container" id="result-container">
-    <div class="card" v-for="result in results">
+    <div class="card" v-for="result in results" style="border-bottom: 1px dashed;">
         <div class="card-body">
             <h5 class="card-title"><a v-bind:href="result.url">{{result.title}}</a></h5>
             <h6 class="card-subtitle mb-2 text-muted">{{result.publishedDateTime}}</h6>
             <h6 class="card-subtitle mb-2 text-muted">{{result.siteName}}</h6>
-            <p class="card-text">{{result.description}}</p>
+            <p class="card-text">{{result.ogDescription}}</p>
+            <p class="card-text" v-if="!result.ogDescription">{{result.description}}</p>
         </div>
     </div>
 

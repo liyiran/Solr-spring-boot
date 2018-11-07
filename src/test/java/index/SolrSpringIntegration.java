@@ -45,35 +45,4 @@ public class SolrSpringIntegration {
         result = webPageRepository.findAllByText("*", sort);
         assertEquals("Dunkin’ Donuts declares the start of pumpkin spice season", result.get(0).getTitle());
     }
-//    @BeforeAll
-//    public void setup() {
-//        this.container = new CoreContainer("testdata/solr");
-//        this.container.load();
-//
-//        this.server = new EmbeddedSolrServer(container, "collection1");
-//
-//
-//        try {
-//            server.deleteByQuery("*:*");
-//            server.commit();
-//        } catch (SolrServerException e) {
-//            logger.error("error", e);
-//        } catch (IOException e) {
-//            logger.error("error", e);
-//        }
-//
-//        SolrInputDocument document = new SolrInputDocument();
-//        document.addField("name", "bob");
-//        document.addField("text", "Lorem ipsum");
-//        document.addField("id", "" + System.currentTimeMillis());
-//
-//        try {
-//            server.add(document);
-//            server.commit();
-//        } catch (SolrServerException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

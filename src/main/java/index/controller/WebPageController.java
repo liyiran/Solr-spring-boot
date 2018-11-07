@@ -42,8 +42,6 @@ public class WebPageController {
         Sort sort = null;
         if (StringUtils.isNotEmpty(sortBy)) {
             sort = new Sort(Sort.Direction.fromString(direction), sortBy);
-        } else {
-            sort = new Sort(Sort.Direction.ASC, "id");
         }
         List<WebPage> webPages = webPageRepository.findAllByText(text, sort);
 
@@ -54,6 +52,6 @@ public class WebPageController {
             } else {
                 return webPage;
             }
-        }).collect(Collectors.toList());
+        }).limit(10).collect(Collectors.toList());
     }
 }

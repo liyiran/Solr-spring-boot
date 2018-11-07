@@ -26,7 +26,7 @@ public class WebPage {
         this.url = url;
         this.siteName = webPage.siteName;
         this.publishedDateTime = webPage.publishedDateTime;
-        this.description = webPage.description;
+        this.ogDescription = webPage.ogDescription;
     }
 
     @Id
@@ -45,9 +45,11 @@ public class WebPage {
     @Indexed(name = "article_published_time", type = "pdates")
     private String publishedDateTime;
 
-    @Indexed(name = "og_description", type = "pdates")
+    @Indexed(name = "og_description", type = "string")
+    private String ogDescription;
+    
+    @Indexed(name= "description", type="string")
     private String description;
-
 
     public String getId() {
         return id;
@@ -87,6 +89,14 @@ public class WebPage {
 
     public void setPublishedDateTime(String publishedDateTime) {
         this.publishedDateTime = publishedDateTime.toString();
+    }
+
+    public String getOgDescription() {
+        return ogDescription;
+    }
+
+    public void setOgDescription(String ogDescription) {
+        this.ogDescription = ogDescription;
     }
 
     public String getDescription() {
