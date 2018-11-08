@@ -5,7 +5,7 @@ package index;/*
  * All rights reserved.
  */
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import index.entity.WebPage;
 import index.repository.WebPageRepository;
