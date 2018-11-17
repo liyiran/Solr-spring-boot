@@ -53,14 +53,14 @@
 <div class="container" id="result-container">
     <div class="card" v-for="result in results" style="border-bottom: 1px dashed;">
         <div class="card-body">
-            <h5 class="card-title"><a v-bind:href="result.url">{{result.title}}</a></h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{result.publishedDateTime}}</h6>
-            <h6 class="card-subtitle mb-2 text-muted">{{result.siteName}}</h6>
-            <p class="card-text">{{result.ogDescription}}</p>
-            <p class="card-text" v-if="!result.ogDescription">{{result.description}}</p>
+            <h5 class="card-title">Title(clickable): <a v-bind:href="result.url">{{result.title?result.title:'NA'}}</a></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><a v-bind:href="result.url">URL: {{result.url}}</a></h6>
+            <h6 class="card-subtitle mb-2 text-muted">ID: {{result.id}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Publish Data: {{result.publishedDateTime?result.publishedDateTime:'NA'}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Site Name: {{result.siteName?result.siteName:'NA'}}</h6>
+            <p class="card-text">Description: {{result.ogDescription?result.ogDescription:'NA'}}</p>
         </div>
     </div>
-
 </div>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
@@ -80,9 +80,6 @@
         var text = $("#searchContent").val();
         var sortBy = $("#sort-by").val();
         var order = $("#order").val();
-        console.log(text);
-        console.log(sortBy);
-        console.log(order);
         $.ajax({
             type: "GET",
             async: false,

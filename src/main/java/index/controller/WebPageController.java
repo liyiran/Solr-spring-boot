@@ -6,7 +6,6 @@
  */
 package index.controller;
 
-import graph.GraphGenerator;
 import index.entity.WebPage;
 import index.repository.WebPageRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +34,7 @@ public class WebPageController {
     @Qualifier("urlMap")
     @Autowired
     private Map<String, String> urlMap;
-    private static Logger logger = LoggerFactory.getLogger(GraphGenerator.class);
+    private static Logger logger = LoggerFactory.getLogger(WebPageController.class);
 
     @GetMapping("/mercury/{text}")
     public List<WebPage> getAllWebPage(@PathVariable String text, @RequestParam("sort") String sortBy, @RequestParam("direction") String direction) {

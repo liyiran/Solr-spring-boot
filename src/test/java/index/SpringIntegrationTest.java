@@ -42,13 +42,14 @@ public class SpringIntegrationTest {
     private Logger logger = LoggerFactory.getLogger(SpringIntegrationTest.class);
 
     @Test
+//    @Ignore
     public void testRetrieveStudentCourse() throws IOException {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-        File file = new File("resources/result.txt");
+        File file = new File("resources/result_desc.txt");
         String[] queries = {"Donald Trump", "LA Lakers", "Star Wars", "Lebron James", "2018 World Cup", "North Korea", "Hurricane Florence", "Paul Allen"};
         for (String queryString : queries) {
-            String query = String.format("/mercury/%s?sort=&direction=", queryString);
+            String query = String.format("/mercury/%s?sort=pageRankFile&direction=desc", queryString);
             ResponseEntity<List> response = restTemplate.exchange(
                     createURLWithPort(query),
                     HttpMethod.GET, entity, List.class);

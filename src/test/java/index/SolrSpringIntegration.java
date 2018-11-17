@@ -11,6 +11,7 @@ import index.entity.WebPage;
 import index.repository.WebPageRepository;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ public class SolrSpringIntegration {
     private Logger logger = LoggerFactory.getLogger(SolrSpringIntegration.class);
 
     @Test
+    @Ignore
     public void testWebPageRepository() {
         Sort sort = new Sort(Sort.Direction.ASC, "id");
         List<WebPage> result = webPageRepository.findAllByText("*", sort);
