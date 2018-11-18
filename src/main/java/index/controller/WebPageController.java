@@ -8,7 +8,10 @@ package index.controller;
 
 import index.entity.WebPage;
 import index.repository.WebPageRepository;
+import index.service.SolrService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.Suggestion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +38,8 @@ public class WebPageController {
     @Qualifier("urlMap")
     @Autowired
     private Map<String, String> urlMap;
+    @Autowired
+    private SolrService solrService;
     private static Logger logger = LoggerFactory.getLogger(WebPageController.class);
 
     @GetMapping("/mercury/{text}")
@@ -52,5 +58,11 @@ public class WebPageController {
                 return webPage;
             }
         }).limit(10).collect(Collectors.toList());
+    }
+
+    @GetMapping("/mercury/suggest/{text}")
+    public List<String> getSuggestions(@PathVariable String text) throws IOException, SolrServerException {
+        List<Suggestion> suggestions = solrService.getSuggestion(text);
+        return suggestions.stream().map(Suggestion::getTerm).collect(Collectors.toList());
     }
 }
