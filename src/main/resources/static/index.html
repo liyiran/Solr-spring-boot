@@ -22,19 +22,27 @@
             border: 0;
             background: transparent;
         }
+
+        .ui-helper-hidden-accessible {
+            display: none;
+        }
+
+        .ui-autocomplete {
+            list-style-type: none
+        }
     </style>
 </head>
 <!------ Include the above in your HEAD tag ---------->
 <body>
-<div class="container" id="query-container">
+<div class="container">
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
             <div id="imaginary_container">
                 <div class="input-group stylish-input-group">
-                    <input type="text" class="form-control" placeholder="Search" id="searchContent" list="suggestions" v-on:input="suggest">
-                    <datalist id="suggestions">
-                        <option v-for="suggest in suggestions" v-bind:value="suggest">
-                    </datalist>
+                    <input type="text" class="form-control" placeholder="Search" id="searchContent">
+                    <!--<datalist id="suggestions">-->
+                    <!--<option v-for="suggest in suggestions" v-bind:value="suggest">-->
+                    <!--</datalist>-->
                     <span class="input-group-addon">
                         <select class="custom-select" id="sort-by">
                             <option selected value="">default</option>
@@ -66,45 +74,57 @@
     </div>
 </div>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script src="js/vue.js"></script>
 <script>
     $("#search").click(function () {
         search();
     });
-    $("#searchContent").change(function () {
-        var text = $("#searchContent").val();
-        if (text.length > 0) {
-            suggest();
-        }
-    });
+    // $("#searchContent").change(function () {
+    //     var text = $("#searchContent").val();
+    //     if (text.length > 0) {
+    //         suggest();
+    //     }
+    // });
     var result_container = new Vue({
         el: '#result-container',
         data: {
             results: []
         }
     });
-
-    var search_container = new Vue({
-        el: '#query-container',
-        data: {
-            suggestions: []
-        },
-        methods: {
-            suggest() {
-                var text = $("#searchContent").val();
-                $.ajax({
-                    type: "GET",
-                    async: false,
-                    url: "http://localhost:8080/mercury/suggest/" + text,
-                    processData: true,
-                    success: function (result) {
-                        search_container.suggestions = result;
-                    }
-                })
-            }
+    $("#searchContent").autocomplete({
+        minLength: 0,
+        source: function (request, response) {
+            $.ajax({
+                url: "http://localhost:8080/mercury/suggest/" + request.term,
+                dataType: "json",
+                success: function (data) {
+                    response(data);
+                }
+            });
         }
     });
+    // var search_container = new Vue({
+    //     el: '#query-container',
+    //     data: {
+    //         suggestions: []
+    //     },
+    //     methods: {
+    //         suggest() {
+    //             var text = $("#searchContent").val();
+    //             $.ajax({
+    //                 type: "GET",
+    //                 async: false,
+    //                 url: "http://localhost:8080/mercury/suggest/" + text,
+    //                 processData: true,
+    //                 success: function (result) {
+    //                     search_container.suggestions = result;
+    //                 }
+    //             })
+    //         }
+    //     }
+    // });
 
     function suggest() {
         var text = $("#searchContent").val();
