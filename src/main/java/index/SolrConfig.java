@@ -27,7 +27,8 @@ import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 public class SolrConfig {
     @Value("${spring.data.solr.host}")
     String solrURL;
-
+    @Value("src/main/resources/big.txt") 
+    private String dictPath;
     @Bean
     public SolrClient solrClient() {
         return new HttpSolrClient.Builder(solrURL).build();
@@ -38,4 +39,11 @@ public class SolrConfig {
         return new SolrTemplate(client);
     }
 
+    public String getDictPath() {
+        return dictPath;
+    }
+
+    public void setDictPath(String dictPath) {
+        this.dictPath = dictPath;
+    }
 }

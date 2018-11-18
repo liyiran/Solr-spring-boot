@@ -65,4 +65,8 @@ public class WebPageController {
         List<Suggestion> suggestions = solrService.getSuggestion(text);
         return suggestions.stream().map(Suggestion::getTerm).collect(Collectors.toList());
     }
+    @GetMapping("/mercury/correction/{text}")
+    public String getCorrection(@PathVariable String text) {
+        return solrService.correct(text);
+    }
 }
