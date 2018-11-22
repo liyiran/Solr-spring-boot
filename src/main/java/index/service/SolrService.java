@@ -2,6 +2,7 @@ package index.service;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.Suggestion;
+import org.apache.tika.exception.TikaException;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,5 +16,5 @@ public interface SolrService {
 
     String correct(String text);
 
-    String getSnippet(String id);
+    String getSnippet(String url) throws IOException, TikaException;
 }

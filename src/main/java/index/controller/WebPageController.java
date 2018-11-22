@@ -12,6 +12,7 @@ import index.service.SolrService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.Suggestion;
+import org.apache.tika.exception.TikaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,12 +66,14 @@ public class WebPageController {
         List<Suggestion> suggestions = solrService.getSuggestion(text);
         return suggestions.stream().map(Suggestion::getTerm).collect(Collectors.toList());
     }
+
     @GetMapping("/mercury/correction/{text}")
     public String getCorrection(@PathVariable String text) {
         return solrService.correct(text);
     }
-    @GetMapping("/mercury/snippet/{id}")
-    public String getSnippet(@PathVariable String id) {
-        return solrService.getSnippet(id);
+
+    @GetMapping("/mercury/snippet/{url}")
+    public String getSnippet(@PathVariable String url) throws IOException, TikaException {
+        return solrService.getSnippet(url);
     }
 }

@@ -7,15 +7,21 @@
 package index.service;
 
 import index.SolrConfig;
+import org.apache.http.client.HttpClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.SuggesterResponse;
 import org.apache.solr.client.solrj.response.Suggestion;
+import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Comparator;
@@ -35,12 +41,15 @@ import javax.annotation.PostConstruct;
 public class SolrServiceImpl implements SolrService {
     private final HttpSolrClient client;
     private final SolrConfig solrConfig;
+    private final HttpClient httpClient;
     private Map<String, Integer> dict = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(StringBuilder.class);
 
     @Autowired
-    public SolrServiceImpl(HttpSolrClient client, SolrConfig dictPath) {
+    public SolrServiceImpl(HttpSolrClient client, SolrConfig dictPath, HttpClient httpClient) {
         this.client = client;
         this.solrConfig = dictPath;
+        this.httpClient = httpClient;
     }
 
     @Override
@@ -61,8 +70,9 @@ public class SolrServiceImpl implements SolrService {
     }
 
     @Override
-    public String getSnippet(String id) {
-        return null;
+    public String getSnippet(String url) throws IOException, TikaException {
+        Tika tika = new Tika();
+        return tika.parseToString(new URL(url)).replaceAll("[^a-zA-Z0-9]", " ").replaceAll("\\s+", " ");
     }
 
     @PostConstruct
