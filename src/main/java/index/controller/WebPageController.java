@@ -69,4 +69,8 @@ public class WebPageController {
     public String getCorrection(@PathVariable String text) {
         return solrService.correct(text);
     }
+    @GetMapping("/mercury/snippet/{id}")
+    public String getSnippet(@PathVariable String id) {
+        return solrService.getSnippet(id);
+    }
 }

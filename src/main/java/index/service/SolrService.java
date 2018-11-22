@@ -12,5 +12,8 @@ import java.util.List;
  */
 public interface SolrService {
     List<Suggestion> getSuggestion(String text) throws IOException, SolrServerException;
+
     String correct(String text);
+
+    String getSnippet(String id);
 }

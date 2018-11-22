@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,10 +54,15 @@ public class SolrServiceImpl implements SolrService {
 
     @Override
     public String correct(String text) {
-        Optional<String> e1 = known(edits1(text)).max((a, b) -> dict.get(a) - dict.get(b));
+        Optional<String> e1 = known(edits1(text)).max(Comparator.comparingInt(a -> dict.get(a)));
         if (e1.isPresent()) return dict.containsKey(text) ? text : e1.get();
-        Optional<String> e2 = known(edits1(text).map(this::edits1).flatMap((x) -> x)).max((a, b) -> dict.get(a) - dict.get(b));
+        Optional<String> e2 = known(edits1(text).map(this::edits1).flatMap((x) -> x)).max(Comparator.comparingInt(a -> dict.get(a)));
         return (e2.orElse(text));
+    }
+
+    @Override
+    public String getSnippet(String id) {
+        return null;
     }
 
     @PostConstruct
