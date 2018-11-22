@@ -4,9 +4,8 @@
  * Copyright (c) 2003, 2004 WorldTicket A/S
  * All rights reserved.
  */
-package index;
+package index.service;
 
-import index.service.SolrService;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.tika.exception.TikaException;
 import org.junit.Assert;
@@ -35,6 +34,7 @@ public class SolrServiceText {
         String result = solrService.correct("acess");
         Assert.assertEquals("access", result);
     }
+
     @Test
     public void testSnippet() throws IOException, TikaException {
         String result = solrService.getSnippet("http://www-scf.usc.edu/~liyiran/a4.html");

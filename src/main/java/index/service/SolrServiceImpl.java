@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -44,6 +45,7 @@ public class SolrServiceImpl implements SolrService {
     private final HttpClient httpClient;
     private Map<String, Integer> dict = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(StringBuilder.class);
+    private static final Pattern END_OF_SENTENCE = Pattern.compile("\\.\\s+");
 
     @Autowired
     public SolrServiceImpl(HttpSolrClient client, SolrConfig dictPath, HttpClient httpClient) {
@@ -92,6 +94,55 @@ public class SolrServiceImpl implements SolrService {
         Stream<String> inserts = IntStream.range(0, word.length() + 1).boxed().flatMap((i) -> "abcdefghijklmnopqrstuvwxyz".chars().mapToObj((c) -> word.substring(0, i) + (char) c + word.substring(i)));
         Stream<String> transposes = IntStream.range(0, word.length() - 1).mapToObj((i) -> word.substring(0, i) + word.substring(i + 1, i + 2) + word.charAt(i) + word.substring(i + 2));
         return Stream.of(deletes, replaces, inserts, transposes).flatMap((x) -> x);
+    }
+
+    protected String findSnippet(String orignal, String target) {
+//        final String lcword = target;
+//        Stream<String> sentences = END_OF_SENTENCE.splitAsStream(orignal);
+//        Optional<String> sentence = sentences
+//                .filter(s -> s.contains(lcword))
+//                .findFirst().
+////        if(!sentence.isPresent()){
+////            sentences.map(s -> {return s.split(" ");}).filter(s ->{
+////                StringUtils.containsAny(s,)
+////            });
+////        }
+//        return   
+        String[] sentences = orignal.split("\\.\\s+");
+        String allWords = null;
+        String noOrder = null;
+        String partial = null;
+        for (String sentence : sentences) {
+            if (allWords == null && sentence.contains(target)) {
+                allWords = sentence;
+            } else {
+                String[] ta = target.split(" ");
+                if (noOrder == null && containsAll(sentence, ta)) {
+                    noOrder = sentence;
+                } else if (partial == null && containAny(sentence, ta)) {
+                    partial = sentence;
+                }
+            }
+        }
+        return allWords != null ? allWords : noOrder != null ? noOrder : partial;
+    }
+
+    private boolean containsAll(String original, String[] targets) {
+        for (String target : targets) {
+            if (!original.contains(target)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean containAny(String orignal, String[] targets) {
+        for (String target : targets) {
+            if (orignal.contains(target)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
