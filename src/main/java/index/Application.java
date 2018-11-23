@@ -8,8 +8,6 @@ package index;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -44,8 +42,5 @@ public class Application {
         }
         return urlFileMap;
     }
-    @Bean
-    public HttpClient getHttpClient() {
-        return HttpClients.createDefault();
-    }
+    
 }

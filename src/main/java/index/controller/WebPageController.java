@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -72,8 +74,8 @@ public class WebPageController {
         return solrService.correct(text);
     }
 
-    @GetMapping("/mercury/snippet/{url}")
-    public String getSnippet(@PathVariable String url) throws IOException, TikaException {
-        return solrService.getSnippet(url);
+    @GetMapping("/mercury/snippet/{text}")
+    public String getSnippet(@RequestParam("url") String url, @PathVariable String text) throws IOException, TikaException {
+        return solrService.getSnippet(URLDecoder.decode(url, Charset.defaultCharset()), text);
     }
 }

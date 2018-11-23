@@ -8,6 +8,7 @@ package index;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class SpringIntegrationTest {
     private Logger logger = LoggerFactory.getLogger(SpringIntegrationTest.class);
 
     @Test
-//    @Ignore
+    @Ignore
     public void testRetrieveStudentCourse() throws IOException {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<String>(null, headers);
@@ -60,9 +61,20 @@ public class SpringIntegrationTest {
                     stream().
                     map(item -> ((LinkedHashMap) item).get("url").toString()).
                     collect(Collectors.toList());
-            FileUtils.writeStringToFile(file, queryString + "\n", Charset.defaultCharset(),true);
-            FileUtils.writeStringToFile(file, urls.toString()+"\n", Charset.defaultCharset(), true);
+            FileUtils.writeStringToFile(file, queryString + "\n", Charset.defaultCharset(), true);
+            FileUtils.writeStringToFile(file, urls.toString() + "\n", Charset.defaultCharset(), true);
         }
+    }
+
+    @Test
+    public void testSnippet() {
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+        String query = "/mercury/snippet/heihei?url=http%3A%2F%2Fwww-scf.usc.edu%2F%7Eliyiran%2Fa4.html";
+        ResponseEntity<List> response = restTemplate.exchange(
+                createURLWithPort(query),
+                HttpMethod.GET, entity, List.class);
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     private String createURLWithPort(String uri) {

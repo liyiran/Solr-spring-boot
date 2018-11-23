@@ -16,7 +16,7 @@ import org.junit.Test;
 public class SolrServiceUnitTest {
     @Test
     public void testSnippetGeneration() {
-        SolrServiceImpl solrServiceImpl = new SolrServiceImpl(null, null, null);
+        SolrServiceImpl solrServiceImpl = new SolrServiceImpl(null, null);
         String orginal = "Donald John Trump (born June 14, 1946) is the 45th and current President of the United States. " +
                 "Before entering politics, he was a businessman and television personality.\n " +
                 "Trump was born and raised in the New York City borough of Queens.";
@@ -32,6 +32,12 @@ public class SolrServiceUnitTest {
 
         result = solrServiceImpl.findSnippet(orginal, "Trump born");
         Assert.assertEquals("Donald John Trump (born June 14, 1946) is the 45th and current President of the United States",result);
+
+        result = solrServiceImpl.findSnippet(orginal, "Trump sb");
+        Assert.assertEquals("Donald John Trump (born June 14, 1946) is the 45th and current President of the United States",result);
+
+        result = solrServiceImpl.findSnippet(orginal, "York sb");
+        Assert.assertEquals("Trump was born and raised in the New York City borough of Queens.",result);
 
     }
 }

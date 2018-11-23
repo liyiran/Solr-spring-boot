@@ -7,7 +7,6 @@
 package index.service;
 
 import index.SolrConfig;
-import org.apache.http.client.HttpClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -42,16 +41,14 @@ import javax.annotation.PostConstruct;
 public class SolrServiceImpl implements SolrService {
     private final HttpSolrClient client;
     private final SolrConfig solrConfig;
-    private final HttpClient httpClient;
     private Map<String, Integer> dict = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(StringBuilder.class);
     private static final Pattern END_OF_SENTENCE = Pattern.compile("\\.\\s+");
 
     @Autowired
-    public SolrServiceImpl(HttpSolrClient client, SolrConfig dictPath, HttpClient httpClient) {
+    public SolrServiceImpl(HttpSolrClient client, SolrConfig dictPath) {
         this.client = client;
         this.solrConfig = dictPath;
-        this.httpClient = httpClient;
     }
 
     @Override
@@ -72,9 +69,10 @@ public class SolrServiceImpl implements SolrService {
     }
 
     @Override
-    public String getSnippet(String url) throws IOException, TikaException {
+    public String getSnippet(String url, String text) throws IOException, TikaException {
         Tika tika = new Tika();
-        return tika.parseToString(new URL(url)).replaceAll("[^a-zA-Z0-9]", " ").replaceAll("\\s+", " ");
+        String html = tika.parseToString(new URL(url)).replaceAll("[^a-zA-Z0-9]", " ").replaceAll("\\s+", " ");
+        return findSnippet(html, text);
     }
 
     @PostConstruct
@@ -96,18 +94,7 @@ public class SolrServiceImpl implements SolrService {
         return Stream.of(deletes, replaces, inserts, transposes).flatMap((x) -> x);
     }
 
-    protected String findSnippet(String orignal, String target) {
-//        final String lcword = target;
-//        Stream<String> sentences = END_OF_SENTENCE.splitAsStream(orignal);
-//        Optional<String> sentence = sentences
-//                .filter(s -> s.contains(lcword))
-//                .findFirst().
-////        if(!sentence.isPresent()){
-////            sentences.map(s -> {return s.split(" ");}).filter(s ->{
-////                StringUtils.containsAny(s,)
-////            });
-////        }
-//        return   
+    String findSnippet(String orignal, String target) {
         String[] sentences = orignal.split("\\.\\s+");
         String allWords = null;
         String noOrder = null;

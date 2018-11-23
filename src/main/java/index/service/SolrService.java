@@ -16,5 +16,5 @@ public interface SolrService {
 
     String correct(String text);
 
-    String getSnippet(String url) throws IOException, TikaException;
+    String getSnippet(String url, String text) throws IOException, TikaException;
 }
