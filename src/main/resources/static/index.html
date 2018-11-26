@@ -61,6 +61,9 @@
         </div>
     </div>
 </div>
+<div class="container" id="correction-container">
+    <p v-if="correction">Do you mean: {{correction}}</p>
+</div>
 <div class="container" id="result-container">
     <div class="card" v-for="result in results" style="border-bottom: 1px dashed;">
         <div class="card-body">
@@ -80,6 +83,7 @@
 <script>
     $("#search").click(function () {
         search();
+        correct();
     });
     // $("#searchContent").change(function () {
     //     var text = $("#searchContent").val();
@@ -91,6 +95,12 @@
         el: '#result-container',
         data: {
             results: []
+        }
+    });
+    var suggestion_container = new Vue({
+        el: "#correction-container",
+        data: {
+            correction: null
         }
     });
     $("#searchContent").autocomplete({
@@ -152,6 +162,21 @@
                 result_container.results = result;
             }
         });
+    }
+
+    function correct() {
+        var text = $("#searchContent").val();
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: "http://localhost:8080/mercury/correction/" + text,
+            processData: true,
+            success: function (result) {
+                if (result != text) {
+                    suggestion_container.correction = result;
+                }
+            }
+        })
     }
 </script>
 </body>
