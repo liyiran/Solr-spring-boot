@@ -35,7 +35,7 @@
 </head>
 <!------ Include the above in your HEAD tag ---------->
 <body>
-<div class="container">
+<div class="container" id="search-container">
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
             <div id="imaginary_container">
@@ -63,7 +63,7 @@
     </div>
 </div>
 <div class="container" id="correction-container">
-    <p v-if="correction">Do you mean: <a v-on:click="click()">{{correction}}</a></p>
+    <p v-if="correction">Do you mean: <a v-on:click="click()" id="correction">{{correction}}</a></p>
 </div>
 <div class="container" id="result-container">
     <div class="card" v-for="result in results" style="border-bottom: 1px dashed;">
@@ -86,12 +86,7 @@
         search();
         correct();
     });
-    // $("#searchContent").change(function () {
-    //     var text = $("#searchContent").val();
-    //     if (text.length > 0) {
-    //         suggest();
-    //     }
-    // });
+   
     var result_container = new Vue({
         el: '#result-container',
         data: {
@@ -106,8 +101,9 @@
         methods: {
             click: function () {
                 var text =  $("#correction").text();
-                $("#searchContent").text(text);
+                $("#searchContent").val(text);
                 search();
+                // console.log("heihei")
             }
         }
     });
@@ -126,27 +122,6 @@
             });
         }
     });
-    // var search_container = new Vue({
-    //     el: '#query-container',
-    //     data: {
-    //         suggestions: []
-    //     },
-    //     methods: {
-    //         suggest() {
-    //             var text = $("#searchContent").val();
-    //             $.ajax({
-    //                 type: "GET",
-    //                 async: false,
-    //                 url: "http://localhost:8080/mercury/suggest/" + text,
-    //                 processData: true,
-    //                 success: function (result) {
-    //                     search_container.suggestions = result;
-    //                 }
-    //             })
-    //         }
-    //     }
-    // });
-
     function suggest() {
         var text = $("#searchContent").val();
         $.ajax({
