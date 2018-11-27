@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,10 +54,14 @@ public class WebPageController {
         return webPages.stream().map(webPage -> {
             logger.info(StringUtils.substringAfterLast(webPage.getId(), "/"));
             if (StringUtils.isBlank(webPage.getUrl())) {
-                return new WebPage(webPage, urlMap.get(StringUtils.substringAfterLast(webPage.getId(), "/")));
-            } else {
-                return webPage;
+                webPage = new WebPage(webPage, urlMap.get(StringUtils.substringAfterLast(webPage.getId(), "/")));
             }
+            try {
+                webPage.setOgDescription(solrService.getSnippet(webPage.getUrl(), text));
+            } catch (IOException | TikaException e) {
+                logger.error("snippet for URL:" + webPage.getUrl(), e);
+            }
+            return webPage;
         }).limit(10).collect(Collectors.toList());
     }
 
@@ -74,8 +76,8 @@ public class WebPageController {
         return solrService.correct(text);
     }
 
-    @GetMapping("/mercury/snippet/{text}")
-    public String getSnippet(@RequestParam("url") String url, @PathVariable String text) throws IOException, TikaException {
-        return solrService.getSnippet(URLDecoder.decode(url, Charset.defaultCharset()), text);
-    }
+//    @GetMapping("/mercury/snippet/{text}")
+//    public String getSnippet(@RequestParam("url") String url, @PathVariable String text) throws IOException, TikaException {
+//        return solrService.getSnippet(URLDecoder.decode(url, Charset.defaultCharset()), text);
+//    }
 }

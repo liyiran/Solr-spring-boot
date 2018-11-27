@@ -7,6 +7,7 @@
 package index.service;
 
 import index.SolrConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -23,12 +24,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -94,42 +97,58 @@ public class SolrServiceImpl implements SolrService {
         return Stream.of(deletes, replaces, inserts, transposes).flatMap((x) -> x);
     }
 
-    String findSnippet(String orignal, String target) {
-        String[] sentences = orignal.split("\\.\\s+");
+    String findSnippet(String original, String target) {
+//        original = original.toLowerCase();
+//        target = target.toLowerCase();
+        String[] sentences = original.split("\\.\\s+");
         String allWords = null;
         String noOrder = null;
         String partial = null;
+        int index = 0;
         for (String sentence : sentences) {
-            if (allWords == null && sentence.contains(target)) {
+            if (allWords == null && StringUtils.containsIgnoreCase(sentence, target)) {
                 allWords = sentence;
+                index = StringUtils.indexOfIgnoreCase(sentence,target);
             } else {
                 String[] ta = target.split(" ");
-                if (noOrder == null && containsAll(sentence, ta)) {
+                int allIndex = containsAll(sentence, ta);
+                int anyIndex = containAny(sentence, ta);
+                if (noOrder == null && allIndex != -1) {
                     noOrder = sentence;
-                } else if (partial == null && containAny(sentence, ta)) {
+                    index = allIndex;
+                } else if (partial == null && anyIndex != -1) {
                     partial = sentence;
+                    index = anyIndex;
                 }
             }
         }
-        return allWords != null ? allWords : noOrder != null ? noOrder : partial;
+        String snippet = allWords != null ? allWords : noOrder != null ? noOrder : partial;
+        if (StringUtils.isNotEmpty(snippet)) {
+            snippet = snippet.substring(index, index + 160);
+        }
+        return snippet;
     }
 
-    private boolean containsAll(String original, String[] targets) {
+    private int containsAll(String original, String[] targets) {
         for (String target : targets) {
-            if (!original.contains(target)) {
-                return false;
+            if (!StringUtils.containsIgnoreCase(original, target)) {
+                return -1;
             }
         }
-        return true;
+        return StringUtils.indexOfIgnoreCase(original, targets[0]);
     }
 
-    private boolean containAny(String orignal, String[] targets) {
+    private int containAny(String orignal, String[] targets) {
         for (String target : targets) {
-            if (orignal.contains(target)) {
-                return true;
+            if (StringUtils.containsIgnoreCase(orignal, target)) {
+                return StringUtils.indexOfIgnoreCase(orignal, target);
             }
         }
-        return false;
+        return -1;
+    }
+
+    private List<Integer> findIndex(String sentence, String[] targets) {
+        return Arrays.stream(targets).map(sentence::indexOf).collect(Collectors.toList());
     }
 
 }

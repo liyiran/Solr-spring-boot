@@ -28,7 +28,8 @@
         }
 
         .ui-autocomplete {
-            list-style-type: none
+            list-style-type: none;
+            background-color: blanchedalmond;
         }
     </style>
 </head>
@@ -62,7 +63,7 @@
     </div>
 </div>
 <div class="container" id="correction-container">
-    <p v-if="correction">Do you mean: {{correction}}</p>
+    <p v-if="correction">Do you mean: <a v-on:click="click()">{{correction}}</a></p>
 </div>
 <div class="container" id="result-container">
     <div class="card" v-for="result in results" style="border-bottom: 1px dashed;">
@@ -97,11 +98,21 @@
             results: []
         }
     });
-    var suggestion_container = new Vue({
+    var correction_container = new Vue({
         el: "#correction-container",
         data: {
             correction: null
+        },
+        methods: {
+            click: function () {
+                var text =  $("#correction").text();
+                $("#searchContent").text(text);
+                search();
+            }
         }
+    });
+    $("#correction").click(function (event) {
+       
     });
     $("#searchContent").autocomplete({
         minLength: 0,
@@ -173,7 +184,7 @@
             processData: true,
             success: function (result) {
                 if (result != text) {
-                    suggestion_container.correction = result;
+                    correction_container.correction = result;
                 }
             }
         })
